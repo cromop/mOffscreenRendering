@@ -1,5 +1,5 @@
-#ifndef COLLISIONDETECTION_H
-#define COLLISIONDETECTION_H
+#ifndef OFFSCREENRENDERER_H
+#define OFFSCREENRENDERER_H
 
 #include <glew.h>
 #include <QOffscreenSurface>
@@ -8,18 +8,19 @@
 #include <QThread>
 
 
-class CollisionDetection : public QThread
+class OffscreenRenderer : public QThread
 {
 
     public:
-        CollisionDetection();
-        CollisionDetection(QOffscreenSurface * s);
-        ~CollisionDetection();
+        OffscreenRenderer();
+        OffscreenRenderer(QOffscreenSurface * s);
+        ~OffscreenRenderer();
         void initView();
         void initBuffers();
         void draw();
 
         void run();
+        void stop();
 
     private:
         uchar * pixels;
@@ -29,9 +30,9 @@ class CollisionDetection : public QThread
         GLsizei image_height;
         QOffscreenSurface * surface;
         QOpenGLContext * context;
-        QOpenGLContext * contextaux;
+//        QOpenGLContext * contextaux;
         bool doRendering;
         bool isInitalized;
 };
 
-#endif // COLLISIONDETECTION_H
+#endif // OFFSCREENRENDERER_H

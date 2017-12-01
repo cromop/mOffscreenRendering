@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 
+
 OGLWidget::OGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
     timer = new QTimer();
@@ -12,6 +13,15 @@ OGLWidget::OGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 
 OGLWidget::~OGLWidget()
 {
+    // stop and wait for rendering loop to terminate
+    renderer->stop();
+    renderer->wait();
+
+    timer->stop();
+
+    delete timer;
+    delete renderer;
+    delete csurface;
 }
 
 void OGLWidget::initializeGL()
@@ -31,12 +41,12 @@ void OGLWidget::initializeGL()
     csurface->setFormat(context()->format());
     csurface->create();
 
-//    collision = new CollisionDetection(csurface, this->context());
-    collision = new CollisionDetection(csurface);
+//    renderer = new CollisionDetection(csurface, this->context());
+    renderer = new OffscreenRenderer(csurface);
 
     doneCurrent();
 
-    collision->start();
+    renderer->start();
     timer->start(500);
 }
 

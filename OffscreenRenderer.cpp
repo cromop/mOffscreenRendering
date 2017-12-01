@@ -1,11 +1,12 @@
 #include "OffscreenRenderer.h"
 #include <iostream>
 
-CollisionDetection::CollisionDetection()
+
+OffscreenRenderer::OffscreenRenderer()
 {
 }
 
-CollisionDetection::CollisionDetection(QOffscreenSurface * s)
+OffscreenRenderer::OffscreenRenderer(QOffscreenSurface * s)
 {
     image_width = 512;
     image_height = 512;
@@ -21,11 +22,14 @@ CollisionDetection::CollisionDetection(QOffscreenSurface * s)
     isInitalized = false;
 }
 
-CollisionDetection::~CollisionDetection()
+OffscreenRenderer::~OffscreenRenderer()
 {
+    delete pixels;
+    delete qi;
+    delete context;
 }
 
-void CollisionDetection::initView()
+void OffscreenRenderer::initView()
 {
     glViewport(0, 0, image_width, image_height);
 
@@ -41,7 +45,7 @@ void CollisionDetection::initView()
         glFrustum(-0.0005*aspect, 0.0005*aspect, -0.0005, 0.0005, 0.001, 1000.0);
 }
 
-void CollisionDetection::initBuffers()
+void OffscreenRenderer::initBuffers()
 {
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -60,7 +64,7 @@ void CollisionDetection::initBuffers()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void CollisionDetection::draw()
+void OffscreenRenderer::draw()
 {
     glColor3f(0.0,1.0,0.0);
 
@@ -102,21 +106,17 @@ void CollisionDetection::draw()
         std::cerr << "There was a problem saving the image" << std::endl;
 }
 
-void CollisionDetection::run()
+void OffscreenRenderer::run()
 {
     while(doRendering)
     {
         if(!isInitalized)
         {
-            std::cerr << "First time" << std::endl;
-
             isInitalized = true;
 
             context = new QOpenGLContext();
-//            context->setFormat(contextaux->format());
             context->setFormat(surface->format());
             context->create();
-
             context->makeCurrent(surface);
 
             initBuffers();
@@ -128,4 +128,7 @@ void CollisionDetection::run()
     }
 }
 
-
+void OffscreenRenderer::stop()
+{
+    doRendering = false;
+}

@@ -7,6 +7,7 @@
 #include <OffscreenRenderer.h>
 #include <QTimer>
 
+
 class OGLWidget : public QOpenGLWidget
 {
     Q_OBJECT
@@ -23,9 +24,9 @@ protected:
 private:
     float vwidth;
     float vheight;
-    CollisionDetection *collision;
+    OffscreenRenderer *renderer;
     QOffscreenSurface *csurface;
-    QOpenGLContext *ccontext;
+//    QOpenGLContext *ccontext;
     QTimer *timer;
 
 
